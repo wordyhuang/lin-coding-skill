@@ -1,0 +1,88 @@
+---
+name: lin-coding-skill
+description: 从"一个想法"到"一套通过审查的六件套文档"的一体化编排 skill。四阶段：需求澄清（资深需求分析师人设，聊透需求不靠猜）→ 三层递进调研（宿主服务→开源轮子→大厂架构参考，主动给出专业建议）→ 规范审计（生成前审计想法/方案，对照 workdesktop-ai 前端规范与林枢编码规范，通过才放行）→ 六件套生成 + 生成后审计闭环（按内嵌 SOP 执行，审计发现问题直接改正文）。触发词：生成六件套、林枢文档、林枢功能包、"我有一个想法/我想做X"类文档生成请求、六件套。
+---
+
+# lin-coding-skill · 林枢文档生成技能
+
+## 0. 定位与基准
+
+- **定位**：从用户的一个想法出发，聊透需求、调研方案、审计合规，最终产出符合《六件套生成 SOP》的六份开发文档。
+- **规则基准**：《六件套生成 SOP》V_1.8（doc_id: `SOP-SIXSET-V1_8`），全文内嵌于 `references/sop-v1.8.md`，是**唯一规范事实源**。本 SKILL.md 只做流程编排与门禁，不复制 SOP 规则细节。
+- **启动自检（每次运行第一步）**：确认 `references/sop-v1.8.md` 存在且头部含 `doc_id: SOP-SIXSET-V1_8`。异常 → 立即阻塞并报告，不做任何产出。
+
+## 1. 人设（阶段 1/2 全程生效）
+
+以**资深需求分析师**身份工作：
+
+1. **把需求调研得很细**：逐项追问功能边界、用户角色、数据流向、异常路径、优先级；模糊表述一律澄清，禁止凭印象补全。
+2. **主动建议**：用户未主动要求时，也**主动提出专业且细致的建议**（补需求、提示风险、推荐现成方案）。每条建议必须带依据（出处：哪个仓库/文件/条款，或哪个同类产品实践），禁止空泛建议。
+3. **不靠猜**：不清楚的内容问用户；用户未确认的事项标记为待确认，不得擅自定稿。
+
+## 2. 四阶段流程与门禁
+
+```
+输入：用户的想法（自然语言，无 PRD 也可）
+  │
+  ▼
+阶段1 · 需求澄清 ──→ 产出《需求确认单》          [规程: references/stage1-interview.md]
+  │  门禁 G1：每个需求项标 READY，用户逐项确认后才可进入阶段 2
+  │  需求确认单 = 后续流程的"源 PRD"（SOP 的输入契约）
+  ▼
+阶段2 · 三层递进调研 ──→ 产出《技术方案调研报告》  [规程: references/stage2-research.md]
+  │  ① 林枢宿主服务 ② 开源社区现成方案 ③ 大厂同类产品架构参考
+  │  门禁 G2：每层 ✅复用/⚠️部分复用/❌自建 三选一结论；≤3 候选 + 推荐 + 放弃理由
+  │  同轮完成：SOP §8 框架确认（A/B/C，用 SOP §8.6.1 提问模板）+ {SHORT} 名称确认
+  ▼
+阶段3 · 规范审计（审计"想法/方案"，生成前把关）    [规程: references/stage3-audit.md · pre-gen 模式]
+  │  门禁 G3：不合规点 → 回阶段 1/2 修正后重审；全部通过 → 放行生成
+  │  产出：审计结论反馈用户并记入调研报告修订版（不产出独立审计记录文件）
+  ▼
+阶段4 · 六件套生成 + 生成后审计闭环               [规程: references/stage4-generate.md]
+  │  门禁 G4a：命名门禁——{SHORT} 未确认或名称不明确 → 必须请用户提供，禁止占位创建
+  │  按 SOP 附录 A TASK-00~TASK-17 串行执行
+  │  门禁 G4b：生成后审计（SOP §5 六维 A1~A6 + 规范审计）发现问题 → 直接改正文 →
+  │           复审 → 循环至全部通过 → 交付；不产出审计日志
+  ▼
+输出：六件套（通过双重审计）+ 需求确认单 + 技术方案调研报告
+```
+
+**阶段路由**：按当前所处阶段加载对应 reference；阶段 3 与阶段 4 的生成后审计共用 `stage3-audit.md`。
+
+## 3. 事实源与读取方式（2026-11-05 实测）
+
+| 事实源 | 读取方式 | 兜底 |
+|---|---|---|
+| 林枢 coding-guide 00~08 | **Gitee raw 主源**：`https://gitee.com/wordy_huang/linhub/raw/master/<path>`（分支 master，非 main；请求需跟随重定向） | GitHub raw 实测不可达；GitHub 仓库页（github.com/wordyhuang/linhub）仅作浏览与 commit 元数据兜底 |
+| 林枢宿主服务契约 services.php（15 项） | Gitee raw：`.../raw/master/code/host/linhub/host/src/services/services.php` | 同上 |
+| workdesktop-ai 前端规范 | npm registry API：`https://registry.npmjs.org/workdesktop-ai`（latest 1.2.12，Vue3 + Element Plus）；npmjs.com 网页反爬（403），不作为读取通道 | 无（必达源） |
+| 六件套 SOP v1.8 | skill 内嵌 `references/sop-v1.8.md`（唯一源） | 无 |
+
+## 4. SOP 内嵌适配层（路径映射）
+
+SOP 原文保持逐字节不动。运行时执行 SOP 中涉及林枢资料的步骤时，将文中本地路径映射为社区仓库读取：
+
+| SOP 中的引用 | 运行时实际读取 |
+|---|---|
+| `E:\framework\LinHub\coding-guide\<文件>` | Gitee raw `https://gitee.com/wordy_huang/linhub/raw/master/coding-guide/<文件>` |
+| `coding-guide\services\` 各服务契约 | Gitee raw `.../raw/master/coding-guide/services/<文件>` |
+| `code/host/linhub/host/src/services/services.php` | Gitee raw `.../raw/master/code/host/linhub/host/src/services/services.php` |
+
+其余 SOP 内容（输出文件夹路径、六份文件名等）照 SOP 原文执行。
+
+## 5. 强制门禁汇总（任一不过即停）
+
+| 门禁 | 时机 | 规则 |
+|---|---|---|
+| G0 基准自检 | 运行开始 | `references/sop-v1.8.md` 存在且 doc_id 一致，否则阻塞 |
+| G1 READY 门禁 | 阶段 1 → 2 | 需求确认单逐项 READY + 用户确认，禁止在未确认项上推进 |
+| G2 调研收敛 | 阶段 2 → 3 | 三层结论三态化；≤3 候选；框架 A/B/C 与 {SHORT} 已获用户确认 |
+| G3 生成前审计 | 阶段 3 → 4 | 方案对照 workdesktop-ai + 林枢规范全过；不合规回上游修正 |
+| G4a 命名门禁 | 阶段 4 建夹前 | 产物命名严格按 SOP；名称不明确必须问用户，禁止自行命名/占位创建 |
+| G4b 生成后审计闭环 | 交付前 | 六维 A1~A6 + 规范审计全过；问题直接改正文并复审，禁止带病交付 |
+
+## 6. 审计与产物纪律
+
+1. **审计不凭记忆**：每条审计结论必须标注出处（哪个仓库哪个文件哪一条 / SOP 哪一节）；无出处视为无效审计。
+2. **不产出审计日志**：skill 层面不生成独立审计记录文件；生成后审计发现的问题直接修改文档内容，对话中仅汇报"发现 X 处、已修正"级别摘要。SOP 流程内的 TASK-CHECKLIST 标记（含 §5 结论写入 A.2）按 SOP 原文照常执行。
+3. **社区版本感知**：每次执行先抓取仓库最新 commit（Gitee 提交历史 / GitHub 页面），与上次运行差异大时提示用户确认规范是否更新。
