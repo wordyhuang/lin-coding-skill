@@ -256,7 +256,7 @@ fr_total: N                    # 需求清单必填；任务清单用 task_total
 | 后端框架 | ThinkPHP | 8.x | 多模块架构，接口走模块化路由 |
 | 前端组件库 | **workdesktop-ai** | 1.x | Vue 3 + Element Plus 企业级组件库，**UMD 直引，无构建** |
 | 前端框架 | Vue | 3.x | UMD 方式与 workdesktop-ai 一同加载 |
-| 渲染模式 | 前后端不分离 · View 渲染 | — | ThinkPHP View 出页面骨架，Vue 接管控件交互 |
+| 渲染模式 | 静态页面 · 标准 API 驱动 | — | 前端为静态页面，**不使用模板标签**；数据一律通过统一 request 请求后端标准 API；后端负责输出标准 API |
 | 数据库 | MySQL | 5.5.62 | InnoDB；语法受 5.5 限制（见 §8.2.6） |
 | 缓存 / 队列 | Redis / Redis Stream | 5.x+ | 缓存、会话、轻量事件总线 |
 | Web 服务 | Nginx / Apache + PHP-FPM | — | — |
@@ -296,11 +296,11 @@ fr_total: N                    # 需求清单必填；任务清单用 task_total
 
 | # | 合规项 | 具体要求 | 检查方式 |
 |---|---|---|---|
-| F-01 | 渲染模式 | View 渲染（前后端不分离），ThinkPHP 出页面骨架 + Vue 接管交互；**不做全量 SPA 接管** | 文件 4 §0.2 声明渲染模式 |
+| F-01 | 渲染模式 | 前端为静态页面，**不使用模板标签**（不依赖 ThinkPHP View 模板输出页面数据）；数据一律通过统一 request 请求后端标准 API，后端负责输出标准 API；**不做全量 SPA 接管** | 文件 4 §0.2 声明渲染模式 |
 | F-02 | 资源引入 | 公共布局 head 统一引入 element-plus css → workdesktop-ai css → vue3 UMD → element-plus UMD → workdesktop-ai UMD；**禁止私有版本、禁止多版本共存** | 文件 4 §0.2 + FE-00 DoD |
 | F-03 | 应用创建 | 统一 `createReadyApp({...}).mount()`；不得自行 `createApp` 拼装或绕开框架初始化 | 组件与页面任务 DoD |
 | F-04 | 组件优先 | 优先 `wd-station` / `wd-data-grid` / `wd-data-form` / `wd-search-panel` / `wd-drawer` / `wd-viewer` / `wd-button` / `editable-grid` / `wd-descriptions`；**不得自造同类组件** | 文件 4 §0.2 组件映射表 |
-| F-05 | 首屏数据 | 服务端注入 `window.__INITIAL_DATA__`；首屏**禁止二次请求**拉同一批数据 | FE-00 + 各页面 DoD |
+| F-05 | 首屏数据 | 首屏数据**同样通过统一 request 请求标准 API 获取**；**禁止服务端模板注入数据**（不再使用 `window.__INITIAL_DATA__` 等服务端注入方式） | FE-00 + 各页面 DoD |
 | F-06 | 请求层 | 统一 `window.workDesktopConfig.request`（baseURL `/api`、拦截器注入 `uais_token`）；页面内禁止裸 `fetch`/`axios.create` | 文件 4 §4 接口表 |
 | F-07 | 路由与菜单 | 菜单树来自 `menus.php`，**前端不自建菜单**；页面路由落在本包 view 目录，挂到宿主导航 | FE-00 DoD |
 | F-08 | 权限控制 | 前端只控显隐与置灰，服务端二次校验；权限码取自 `permissions.php`，禁止自造 | FE-04 DoD |
@@ -345,7 +345,7 @@ fr_total: N                    # 需求清单必填；任务清单用 task_total
 
 | 形态 | 后端 | 前端 | 适用 |
 |---|---|---|---|
-| **B1 同栈自建** | ThinkPHP 8 + MySQL（版本不限，建议 8.0） | workdesktop-ai UMD + View 渲染（与林枢同款，但无宿主） | 将来可能并入林工矩阵；团队是 PHP 背景；部署简单 |
+| **B1 同栈自建** | ThinkPHP 8 + MySQL（版本不限，建议 8.0） | workdesktop-ai UMD + 静态页面 + 标准 API 驱动（与林枢同款，但无宿主） | 将来可能并入林工矩阵；团队是 PHP 背景；部署简单 |
 | **B2 前后端分离** | 任选：ThinkPHP 8 / Node(NestJS) / Java(Spring Boot)，输出 REST + JWT | Vue 3 + Vite + Element Plus + Pinia + Vue Router；或 React 18 + AntD | 前端团队独立、交互重、需多端复用 |
 
 #### 8.3.3 前端构建方式（B2 口径，B1 参照 §8.2.4 的 F-02~F-11 但自建宿主能力）
@@ -435,7 +435,7 @@ fr_total: N                    # 需求清单必填；任务清单用 task_total
 |---|---|---|---|
 | 宿主耦合 | 强（同进程加载） | 无 | 视宿主而定 |
 | 后端基建工作量 | 低（复用宿主 RBAC/菜单/事件/迁移） | 高（全部自建，+20~30% 人日） | 中~高（取决于宿主能力缺口） |
-| 前端构建 | workdesktop-ai UMD + View 渲染，**无构建链** | B1 同上但自建宿主能力；B2 Vite 工程化 SPA | 按宿主容器形态（UMD / iframe / 微前端 / 仅 API） |
+| 前端构建 | workdesktop-ai UMD + 静态页面 + 标准 API 驱动，**无构建链** | B1 同上但自建宿主能力；B2 Vite 工程化 SPA | 按宿主容器形态（UMD / iframe / 微前端 / 仅 API） |
 | 前端技术基线明确度 | 高（12 条硬性合规项） | 中（形态确定后明确） | 低（需先取宿主资料） |
 | 可组合性（独立可卖 / 组合成拳） | 原生支持 | 不支持，需二次改造 | 取决于宿主生态 |
 | 权限与菜单来源 | `permissions.php` / `menus.php` | 自建表 + 接口下发 | 宿主 API |
@@ -451,8 +451,8 @@ fr_total: N                    # 需求清单必填；任务清单用 task_total
 
 > 生成六件套前需确认技术框架，它决定接入声明、表前缀、后端基建范围与前端构建方式：
 >
-> - **A · 林枢功能包（推荐）**：接入林工基础平台，后端 ThinkPHP 8 + MySQL + Redis，前端固定 **workdesktop-ai**（Vue 3 + Element Plus，UMD 直引、View 渲染、无构建链），权限/菜单/事件/迁移由宿主提供。
-> - **B · 自主构建**：独立应用，不接宿主；前端二选一 —— B1 同款 workdesktop-ai + View 渲染（将来可并入矩阵），B2 Vue3 + Vite 工程化 SPA（或 React + AntD）。
+> - **A · 林枢功能包（推荐）**：接入林工基础平台，后端 ThinkPHP 8 + MySQL + Redis（负责输出标准 API），前端固定 **workdesktop-ai**（Vue 3 + Element Plus，UMD 直引、静态页面 + 标准 API 驱动、无构建链），权限/菜单/事件/迁移由宿主提供。
+> - **B · 自主构建**：独立应用，不接宿主；前端二选一 —— B1 同款 workdesktop-ai + 静态页面 + 标准 API 驱动（将来可并入矩阵），B2 Vue3 + Vite 工程化 SPA（或 React + AntD）。
 > - **C · 其他框架 / 客户既有宿主**：按宿主协议接入，需先提供 8 项宿主资料（见 §8.4.2），前端构建按宿主容器形态确定。
 >
 > 三项的完整口径见本文件 §8。
@@ -480,7 +480,7 @@ frontend_build: workdesktop-ai | workdesktop-ai-self-hosted | vite-spa | react-s
 | `linshu` | 林枢功能包 | A |
 | `self_built` | 自主构建 | B |
 | `other:<宿主名>` | 其他宿主，如 `other:customer-erp` | C |
-| `workdesktop-ai` | workdesktop-ai + View 渲染，宿主提供 | A |
+| `workdesktop-ai` | workdesktop-ai + 静态页面 + 标准 API 驱动，宿主提供 | A |
 | `workdesktop-ai-self-hosted` | 同款前端但自建宿主能力 | B1 |
 | `vite-spa` / `react-spa` | 前后端分离工程化 | B2 |
 | `host-container` | 微前端 / iframe 容器 | C |
@@ -565,4 +565,4 @@ frontend_build: workdesktop-ai | workdesktop-ai-self-hosted | vite-spa | react-s
 
 ### 公共版修改记录（lin-coding-skill 内嵌版，基准：SOP V_1.8）
 
-- 2026-11-05 · **公共化直改**：① 林枢资料引用改写为社区仓库地址（Gitee raw `https://gitee.com/wordy_huang/linhub/raw/master/...` 主源 + GitHub 镜像），移除全部本地路径；② 输出目录改为通用解析规则（输出根目录 = `{任务目录}/dist/` 优先 → 用户指定 → 询问用户；输出文件夹 = `{输出根目录}/{SHORT}/`）；③ §8.2.2 多租户口径由"系统库 + 每租户独立库"修正为**同库多租户**（同一业务库 + `tenant_id` 字段隔离，业务表必须携带 `tenant_id`，系统级表须经宿主服务访问）；④ 林枢英文名统一为小写 `linhub`（含引用文档标题处），与社区仓库名一致。
+- 2026-11-05 · **公共化直改**：① 林枢资料引用改写为社区仓库地址（Gitee raw `https://gitee.com/wordy_huang/linhub/raw/master/...` 主源 + GitHub 镜像），移除全部本地路径；② 输出目录改为通用解析规则（输出根目录 = `{任务目录}/dist/` 优先 → 用户指定 → 询问用户；输出文件夹 = `{输出根目录}/{SHORT}/`）；③ §8.2.2 多租户口径由"系统库 + 每租户独立库"修正为**同库多租户**（同一业务库 + `tenant_id` 字段隔离，业务表必须携带 `tenant_id`，系统级表须经宿主服务访问）；④ 林枢英文名统一为小写 `linhub`（含引用文档标题处），与社区仓库名一致；⑤ 前后端交互口径修正：**后端负责输出标准 API；前端为静态页面，不使用模板标签（弃用 ThinkPHP View 模板输出数据与服务端数据注入），数据一律通过统一 request 请求标准 API 端口**——§8.2.2 渲染模式、F-01/F-05、§8.3 B1、§8.4/§8.6.1 提问模板与基线表同步更新。
