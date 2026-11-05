@@ -43,6 +43,7 @@
 | C4 | 服务映射真实性 | 文件 6 服务映射三态结论对照 `services.php` 实际清单，禁止虚构服务 id |
 | C5 | 框架口径 | 六份 front matter `framework`/`frontend_build` 三处一致（SOP 红线 6、A5） |
 | C6 | 页面规格覆盖 | 文件 4 §1 每个页面均附页面规格卡，内容 / 布局 / 元素 / 操作四层齐备；逐页核对：无"等"字省略、无规格外自创元素与交互、推导项带"推导，待评审"标注、页面任务回链 PG-ID（SOP §2.4 文件 4 §1/§2、TASK-10 判据） |
+| C7 | 编码规范声明 | 六份文件 §0 + `TASK-CHECKLIST.md` 头部逐字含 SOP 公共要求 7 的编码规范遵循声明（指向 linhub coding-guide 00~08 + 社区仓库地址），front matter `coding_guide: linhub/coding-guide` 齐备，§0.1 会话规约含开工前阅读提醒——共 7 处，缺一或改写即不通过（SOP §2.3 第 7 条、A1 ⑤） |
 
 ### 2.3 静默修正闭环
 
