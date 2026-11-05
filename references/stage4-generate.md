@@ -22,18 +22,26 @@
 ## 2. 执行编排（严格串行，禁止乱序、禁止跳项）
 
 1. **读 SOP**：完整读取 `sop-v1.8.md` §1~§8 + 附录 A（禁止只读标题开工）。
-2. **TASK-00~TASK-17**：按附录 A 任务清单逐项串行执行（SOP §3 生成顺序：⓪ 框架与名称确认 → ① 需求清单 → ②③④ DB/后端/前端清单 → ⑤ 任务对账单 → ⑥ 对接点位清单）。
-3. **源 PRD 替代**：本流程的"源 PRD" = 阶段 1《需求确认单》+ 阶段 2《技术方案调研报告》。红线 1（唯一事实来源、禁止凭印象补全）同样适用；发现两者冲突 → 以确认单为准并登记 OI。
-4. **林枢资料读取**：SOP 中林枢资料引用已直接写为社区仓库地址（Gitee raw 主源 + GitHub 镜像），照其读取；framework=linshu 时 TASK-12 前必须先读 `08_平台服务接入指引.md`、`services/` 契约与 `services.php`。
-5. **TASK-CHECKLIST 即时标记**：每完成一项 TASK 立即更新副本状态（SOP §6），禁止批量补标。
-6. **红线**：SOP §4 六条红线全程生效（五类副本跨文件一致、框架口径三处一致、OI 阻塞继承等）。
+2. **页面 UMD 范式强制前置（硬性门禁，先于一切文件产出）**：凡涉及 `src/view/` 下任何页面文件的产出，**必须先完整阅读** `coding-guide/03_前端编码指引.md` §三（页面骨架）与 `coding-guide/04_功能包开发指引.md` §7.2（包页面 GUI 渲染规范——"唯一正确模式"，读取方式见 `stage3-audit.md` §0 事实源表），**禁止凭记忆或惯性书写页面骨架**。页面骨架唯一合法形态（**缺一即返工**）：
+   - **双 CSS**：`element-plus/index.css` + `workdesktop-ai/style.css` 各 1 条 `<link>`；
+   - **四个 UMD `<script src>` 直引**（加载顺序固定）：vue → element-plus → icons → workdesktop-ai；
+   - **`<script type="text/x-template" id="xxx-tpl">`** 承载页面模板（字符串模板，规避 in-DOM 解析缺陷）；
+   - **`createApp({ template: '#xxx-tpl' })`**，且必须 `app.use(ElementPlus)` 与 `app.use(WorkDesktop)`；
+   - **数据请求一律走 `WD.request`**：成功判定 `code >= 0`，失败码必须为负数，解封字段为 `code / message / data`。
+
+   **明确禁止项**：in-DOM 模板挂载（`app.mount` 读内联 DOM——`el-form` 之后会静默截断且无报错）、裸 `fetch`/`axios` 自行封装、npm 构建链。
+3. **TASK-00~TASK-17**：按附录 A 任务清单逐项串行执行（SOP §3 生成顺序：⓪ 框架与名称确认 → ① 需求清单 → ②③④ DB/后端/前端清单 → ⑤ 任务对账单 → ⑥ 对接点位清单）。
+4. **源 PRD 替代**：本流程的"源 PRD" = 阶段 1《需求确认单》+ 阶段 2《技术方案调研报告》。红线 1（唯一事实来源、禁止凭印象补全）同样适用；发现两者冲突 → 以确认单为准并登记 OI。
+5. **林枢资料读取**：SOP 中林枢资料引用已直接写为社区仓库地址（Gitee raw 主源 + GitHub 镜像），照其读取；framework=linshu 时 TASK-12 前必须先读 `08_平台服务接入指引.md`、`services/` 契约与 `services.php`。
+6. **TASK-CHECKLIST 即时标记**：每完成一项 TASK 立即更新副本状态（SOP §6），禁止批量补标。
+7. **红线**：SOP §4 六条红线全程生效（五类副本跨文件一致、框架口径三处一致、OI 阻塞继承等）。
 
 ## 3. 生成后审计闭环（门禁 G4b）
 
 六份文件全部落盘后、收尾任务前，执行两段审计（规程见 `stage3-audit.md` post-gen 模式）：
 
 1. **SOP 六维审计 A1~A6**（SOP §5，结论写 TASK-CHECKLIST A.2 审计记录区）。
-2. **skill 规范审计 C1~C5**（对照 Gitee raw coding-guide + services.php + workdesktop-ai）。
+2. **skill 规范审计 C1~C8**（对照 Gitee raw coding-guide + services.php + workdesktop-ai，含页面 UMD 范式机器扫描）。
 
 闭环规则：
 
@@ -43,4 +51,4 @@
 
 ## 4. 交付
 
-交付物：`{SHORT}\` 下六份文件 + `TASK-CHECKLIST.md`，外加流程级产物《需求确认单》《技术方案调研报告》。交付时向用户汇报：产出文件清单 + 双重审计结论摘要（六维全过、规范审计 C1~C5 全过）。
+交付物：`{SHORT}\` 下六份文件 + `TASK-CHECKLIST.md`，外加流程级产物《需求确认单》《技术方案调研报告》。交付时向用户汇报：产出文件清单 + 双重审计结论摘要（六维全过、规范审计 C1~C8 全过）。

@@ -44,8 +44,32 @@
 | C5 | 框架口径 | 六份 front matter `framework`/`frontend_build` 三处一致（SOP 红线 6、A5） |
 | C6 | 页面规格覆盖 | 文件 4 §1 每个页面均附页面规格卡，内容 / 布局 / 元素 / 操作四层齐备；逐页核对：无"等"字省略、无规格外自创元素与交互、推导项带"推导，待评审"标注、页面任务回链 PG-ID（SOP §2.4 文件 4 §1/§2、TASK-10 判据） |
 | C7 | 编码规范声明 | 六份文件 §0 + `TASK-CHECKLIST.md` 头部逐字含 SOP 公共要求 7 的编码规范遵循声明（指向 linhub coding-guide 00~08 + 社区仓库地址），front matter `coding_guide: linhub/coding-guide` 齐备，§0.1 会话规约含开工前阅读提醒——共 7 处，缺一或改写即不通过（SOP §2.3 第 7 条、A1 ⑤） |
+| C8 | 页面 UMD 范式（机器扫描） | 对 `src/view/` 下全部 `.html` 执行 §2.3 十二项静态扫描，全部 PASS 才通过；与「四级对齐」检查并列，同为页面交付前必过项（细则见 §2.3，规范出处：coding-guide/03 §三、04 §7.2） |
 
-### 2.3 静默修正闭环
+### 2.3 页面 UMD 范式检查（机器可执行静态扫描，交付前必过）
+
+- **扫描对象**：`src/view/` 下全部 `.html`；
+- **判定规则**：12 项全部 PASS → 该页面 PASS；任何一项 FAIL → 该页面整体 FAIL，**输出页面名 + 缺失项清单**；全部页面 PASS → 本项通过；
+- **规范出处**：`coding-guide/03_前端编码指引.md` §三（页面骨架）、`coding-guide/04_功能包开发指引.md` §7.2（包页面 GUI 渲染规范——"唯一正确模式"）。
+
+| # | 检查项 | 规则 |
+|---|--------|------|
+| 1 | 双 CSS · element-plus | 含 `<link rel="stylesheet" ... element-plus/index.css">` 恰 1 条 |
+| 2 | 双 CSS · workdesktop-ai | 含 `<link rel="stylesheet" ... workdesktop-ai/style.css">` 恰 1 条 |
+| 3 | UMD · vue | 含 `<script src=".../vue/vue.global.prod.js">` 恰 1 条 |
+| 4 | UMD · element-plus | 含 `<script src=".../element-plus/index.full.min.js">` 恰 1 条 |
+| 5 | UMD · icons | 含 `<script src=".../icons/index.iife.min.js">` 恰 1 条 |
+| 6 | UMD · workdesktop-ai | 含 `<script src=".../workdesktop-ai/index.umd.js">` 恰 1 条 |
+| 7 | x-template | 含 `<script type="text/x-template" id="...-tpl">` 1 条（模板以字符串模板承载） |
+| 8 | createApp 挂模板 | 含 `createApp({ template: '#...-tpl' ... })` 1 处（禁止 `app.mount` 读内联 DOM） |
+| 9 | 注册 ElementPlus | 含 `app.use(ElementPlus)` 1 处 |
+| 10 | 注册 WorkDesktop | 含 `app.use(WorkDesktop)` 1 处 |
+| 11 | 无裸 fetch | 页面内不出现 `fetch(` 调用 |
+| 12 | 无裸 axios | 页面内不出现 `axios.` 调用（数据请求一律 `WD.request`：成功判定 `code >= 0`，失败码为负数，解封 `code / message / data`） |
+
+> 本项与「四级对齐」检查（`coding-guide/04_功能包开发指引.md` §7.2 ④：菜单 `route` ↔ `route.php` GET 路由 ↔ 控制器 `pageXxx` 方法 ↔ `src/view` 视图文件，可脚本静态扫描）**并列，同为页面交付前必过项**。
+
+### 2.4 静默修正闭环
 
 发现不合规点 → **直接用编辑工具修改文档正文** → 复审 → 循环至全部通过 → 交付。对话中只汇报"发现 X 处、已修正"级别摘要，**不输出审计日志/审计记录文件**。
 
