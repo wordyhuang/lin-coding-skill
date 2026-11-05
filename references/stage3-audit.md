@@ -8,6 +8,7 @@
 |---|---|
 | 林枢编码指引 00~08 | Gitee raw：`https://gitee.com/wordy_huang/linhub/raw/master/coding-guide/<文件名>`（master 分支，跟随重定向） |
 | 宿主服务契约 | Gitee raw：`.../raw/master/code/host/linhub/host/src/services/services.php` |
+| 分导台定义与已装包菜单快照 | Gitee raw：`.../raw/master/code/host/linhub/host/workspaces.php`（六分导台）与 `.../raw/master/code/host/data/integration/registry.json`（已装包 menus.php 快照，菜单结构核对用） |
 | workdesktop-ai | npm registry API：`https://registry.npmjs.org/workdesktop-ai`（组件清单以仓库 README/版本元数据为准） |
 | SOP 规则 | skill 内嵌 `references/sop-v1.8.md` |
 
@@ -45,6 +46,7 @@
 | C6 | 页面规格覆盖 | 文件 4 §1 每个页面均附页面规格卡，内容 / 布局 / 元素 / 操作四层齐备；逐页核对：无"等"字省略、无规格外自创元素与交互、推导项带"推导，待评审"标注、页面任务回链 PG-ID（SOP §2.4 文件 4 §1/§2、TASK-10 判据） |
 | C7 | 编码规范声明 | 六份文件 §0 + `TASK-CHECKLIST.md` 头部逐字含 SOP 公共要求 7 的编码规范遵循声明（指向 linhub coding-guide 00~08 + 社区仓库地址），front matter `coding_guide: linhub/coding-guide` 齐备，§0.1 会话规约含开工前阅读提醒——共 7 处，缺一或改写即不通过（SOP §2.3 第 7 条、A1 ⑤） |
 | C8 | 页面 UMD 范式（机器扫描） | 对 `src/view/` 下全部 `.html` 执行 §2.3 十二项静态扫描，全部 PASS 才通过；与「四级对齐」检查并列，同为页面交付前必过项（细则见 §2.3，规范出处：coding-guide/03 §三、04 §7.2） |
+| C9 | 菜单结构符合性（人工核对） | `menus.php` 对照 `coding-guide/04_功能包开发指引.md` §6.2「宿主渲染规则与 group 聚合分组」逐条比对：工作区归属、group 值、children 挂载、perms 并集（细则见 §2.4，与 C8、四级对齐并列，同为交付前必过项） |
 
 ### 2.3 页面 UMD 范式检查（机器可执行静态扫描，交付前必过）
 
@@ -67,9 +69,24 @@
 | 11 | 无裸 fetch | 页面内不出现 `fetch(` 调用 |
 | 12 | 无裸 axios | 页面内不出现 `axios.` 调用（数据请求一律 `WD.request`：成功判定 `code >= 0`，失败码为负数，解封 `code / message / data`） |
 
-> 本项与「四级对齐」检查（`coding-guide/04_功能包开发指引.md` §7.2 ④：菜单 `route` ↔ `route.php` GET 路由 ↔ 控制器 `pageXxx` 方法 ↔ `src/view` 视图文件，可脚本静态扫描）**并列，同为页面交付前必过项**。
+> 本项与「四级对齐」检查（`coding-guide/04_功能包开发指引.md` §7.2 ④：菜单 `route` ↔ `route.php` GET 路由 ↔ 控制器 `pageXxx` 方法 ↔ `src/view` 视图文件，可脚本静态扫描）及 §2.4 菜单结构符合性检查（C9）**并列，同为页面交付前必过项**。
 
-### 2.4 静默修正闭环
+### 2.4 菜单结构符合性检查（人工核对，交付前必过）
+
+- **核对对象**：功能包 `menus.php` 全部声明项；
+- **核对基准**：`coding-guide/04_功能包开发指引.md` §6.2「菜单归类指导（强制遵循）」+「宿主渲染规则与 group 聚合分组」（读取方式见 §0 事实源表——宿主 `workspaces.php` + `registry.json` 快照）；
+- **判定规则**：下表 4 项逐条比对，任一项不符 → 整体 FAIL，输出菜单项 id + 不符点；全部符合 → 通过。
+
+| # | 核对项 | 规则 |
+|---|--------|------|
+| 1 | 工作区归属 | `parent` 指向语义匹配的现有分导台（六分导台见 guide04 §6.2 表）；业务操作 → `menu.workspace`，配置类 → `menu.system`，待办聚合 → `menu.approval`，报表 → `menu.report`；**不另起平行的根菜单、不自建"待办/报表根菜单"** |
+| 2 | group 值 | 按原生 group 聚合模式：已装包已用过的语义匹配 `group` 值优先复用（多包归入同一分组）；`group` 仅对一级菜单声明，深层菜单不声明（无效）；group 值为语义清晰的中文业务名词 |
+| 3 | children 挂载 | 一级菜单挂 `children` 后自身 `route` 被丢弃（留空/不填路由）；叶子菜单 route 指向包路由或宿主页面；**禁止自创折叠/嵌套中间层**（不得为了"整理菜单"发明宿主不存在的结构层级） |
+| 4 | perms 并集 | 挂子节点的父级 `perms` = 子项权限码的**并集**（菜单按权限过滤可见性）；叶子菜单 perms 与 `permissions.php` 声明、route 门禁 `checkPerm` 三处一致 |
+
+> 本项与 C8 页面 UMD 范式扫描（§2.3）、「四级对齐」检查（guide04 §7.2 ④）**并列，同为交付前必过项**。
+
+### 2.5 静默修正闭环
 
 发现不合规点 → **直接用编辑工具修改文档正文** → 复审 → 循环至全部通过 → 交付。对话中只汇报"发现 X 处、已修正"级别摘要，**不输出审计日志/审计记录文件**。
 
