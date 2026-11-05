@@ -17,7 +17,7 @@
 
 | # | 审计项 | 合规标准（出处） |
 |---|--------|-----------------|
-| P1 | 命名与隔离 | 表前缀 `lg_<short>_`、命名空间 `Lg\Pack\<PascalCase(short)>`、事件主题 `lg.<short>.`、静态目录 `public/lgg/<short>/`（SOP §8.2.3 命名与隔离表） |
+| P1 | 命名与隔离 | 表前缀 `lg_{SHORT}_`（{SHORT} 原样完整保留含连字符，如 `lg_lin-crm_`；禁止替换为下划线）、命名空间 `Lg\Pack\<PascalCase(short)>`、事件主题 `lg.<short>.`、静态目录 `public/lgg/<short>/`（SOP §8.2.3 命名与隔离表） |
 | P2 | 宿主复用优先 | 方案中判 ✅ 宿主已提供的能力**不得安排自建**；T0 不重复建 RBAC/菜单/事件总线/迁移引擎（SOP §8.2.1、红线 6、A5 ③） |
 | P3 | 前端形态 | 选林枢时前端固定 workdesktop-ai + 静态页面 + 标准 API 驱动 + UMD 直引无构建链（**不使用模板标签**，数据一律经统一 request 请求标准 API）；对照 F-01~F-12 逐条预检方案不与之冲突（SOP §8.2.4） |
 | P4 | 技术栈不偏离 | PHP 8.0+ / ThinkPHP 8.x / MySQL（注意 5.5 语法限制）/ Redis Stream（SOP §8.2.2） |
