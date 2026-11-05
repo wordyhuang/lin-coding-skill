@@ -45,12 +45,12 @@
 
 | 规范 | 来源 |
 |------|------|
-| 六件套生成 SOP V_1.8 | **内嵌** `references/sop-v1.8.md`（唯一事实源，逐字节基准） |
+| 六件套生成 SOP V_1.8 | **内嵌** `references/sop-v1.8.md`（唯一事实源；已直接内置社区仓库地址与输出根目录规则，无本地路径依赖） |
 | 林枢编码指引 00~08 | 社区仓库 Gitee raw（master 分支，主源）：<https://gitee.com/wordy_huang/linhub> · GitHub 兜底：<https://github.com/wordyhuang/linhub> |
 | 宿主服务契约（15 项） | `code/host/linhub/host/src/services/services.php`（Gitee raw） |
 | workdesktop-ai | npm registry API（latest 1.2.12 · Vue3 + Element Plus · UMD 直引） |
 
-> SOP 原文中引用的林枢本地路径，由 skill 的**内嵌适配层**在运行时自动映射为上述社区仓库读取，SOP 原文保持逐字节不动。
+> 内嵌 SOP 已将林枢资料引用直接写为上述社区仓库地址，skill 全部文件**不含任何本地路径依赖**，可公开分发使用。
 
 ## 目录结构
 
@@ -81,7 +81,7 @@ lin-coding-skill/
 
 1. **agent 任务上下文（首选）**：`{任务目录}/dist/{SHORT}/`
 2. 用户显式指定的目录
-3. 回落 SOP 默认：`E:\framework\输出文档范本\{SHORT}\`
+3. 回落默认：**询问用户确定**（禁止静默落盘）
 
 `{SHORT}` 为用户确认的项目英文短名（如 `lin-crm`），六份文件 + `TASK-CHECKLIST.md` 均置于该目录下。
 

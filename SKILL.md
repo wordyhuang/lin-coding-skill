@@ -58,28 +58,18 @@ description: 从"一个想法"到"一套通过审查的六件套文档"的一体
 | workdesktop-ai 前端规范 | npm registry API：`https://registry.npmjs.org/workdesktop-ai`（latest 1.2.12，Vue3 + Element Plus）；npmjs.com 网页反爬（403），不作为读取通道 | 无（必达源） |
 | 六件套 SOP v1.8 | skill 内嵌 `references/sop-v1.8.md`（唯一源） | 无 |
 
-## 4. SOP 内嵌适配层（路径映射 + 输出目录覆盖）
+## 4. 输出目录规则
 
-SOP 原文保持逐字节不动。运行时执行 SOP 中涉及林枢资料的步骤时，将文中本地路径映射为社区仓库读取：
-
-| SOP 中的引用 | 运行时实际读取 |
-|---|---|
-| `E:\framework\LinHub\coding-guide\<文件>` | Gitee raw `https://gitee.com/wordy_huang/linhub/raw/master/coding-guide/<文件>` |
-| `coding-guide\services\` 各服务契约 | Gitee raw `.../raw/master/coding-guide/services/<文件>` |
-| `code/host/linhub/host/src/services/services.php` | Gitee raw `.../raw/master/code/host/linhub/host/src/services/services.php` |
-
-其余 SOP 内容（六份文件名、命名规则等）照 SOP 原文执行。
-
-**输出目录覆盖规则**（阶段 4 创建产物前解析一次，全程使用同一根目录）：
+内嵌 SOP 已直接内置社区仓库地址与输出根目录解析规则，**不依赖任何本地路径**。输出根目录按优先级解析一次，全程使用同一根目录：
 
 | 优先级 | 条件 | 输出根目录 |
 |---|---|---|
 | 1（最高） | 运行环境存在 agent 任务目录 / 会话工作目录 | `{任务目录}/dist/{SHORT}/` |
-| 2 | 无任务目录，但用户显式指定了输出位置 | 用户指定目录 |
-| 3（默认回落） | 以上均无 | SOP 原文默认：`E:\framework\输出文档范本\{SHORT}\` |
+| 2 | 用户显式指定输出位置 | 用户指定目录 |
+| 3（默认回落） | 以上均无 | **询问用户确定**，禁止静默落盘 |
 
-- `{SHORT}` 即 SOP 的项目英文短名（用户确认值）；`TASK-CHECKLIST.md`、六份文件均置于该根目录下，相对结构不变。
-- 解析结果须在阶段 4 开工前向用户播报一句（"产物将输出到 X"），禁止静默落盘到用户意料之外的位置。
+- `{SHORT}` 即 SOP 的项目英文短名（用户确认值）；`TASK-CHECKLIST.md`、六份文件均置于 `{输出根目录}/{SHORT}/` 下，相对结构不变。
+- 解析结果须在阶段 4 开工前向用户播报一句（"产物将输出到 X"）。
 
 ## 5. 强制门禁汇总（任一不过即停）
 
