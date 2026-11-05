@@ -75,6 +75,16 @@ lin-coding-skill/
 ~/.workbuddy/skills/lin-coding-skill/
 ```
 
+## 产物输出目录
+
+按优先级解析，开工前向用户播报确认：
+
+1. **agent 任务上下文（首选）**：`{任务目录}/dist/{SHORT}/`
+2. 用户显式指定的目录
+3. 回落 SOP 默认：`E:\framework\输出文档范本\{SHORT}\`
+
+`{SHORT}` 为用户确认的项目英文短名（如 `lin-crm`），六份文件 + `TASK-CHECKLIST.md` 均置于该目录下。
+
 ## 触发方式
 
 对话中出现以下意图即可触发：
