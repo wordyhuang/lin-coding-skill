@@ -19,9 +19,10 @@
 ### 第 ② 层 · 开源社区现成方案（❌ 项逐个调研）
 
 1. 对第 ① 层判 ❌ 的能力，搜索开源社区现成轮子（WebSearch / GitHub 检索）。
-2. 每个候选记录：项目名、链接、活跃度（最近提交/issue）、许可证、与林枢技术栈（PHP 8 + ThinkPHP 8 + MySQL + Vue3 UMD）的兼容性。
-3. 逐项三态结论：✅ 直接复用（附接入方式）/ ⚠️ 参考实现（附借鉴点）/ ❌ 仍需自建（附理由）。
-4. 注意：**林枢功能包禁止引入 npm 构建链（SOP F-12）**，前端类轮子必须以 UMD 直引或纯后端实现为前提评估。
+2. **前端类能力先查 workdesktop-ai 是否已覆盖**（再往社区找轮子）：按其 AI 阅读路由 `https://gitee.com/wordy_huang/workdesktop-ai/raw/main/ai-router.md`（场景判定速查表）→ `scenarios/0N-*.md`（场景）与 `ai-api/`（34 组件精确 API，GitHub 镜像 `https://github.com/wordyhuang/workdesktop-ai`）；已覆盖即记 ✅（附组件名 + `ai-api/wd-{组件名kebab}.md` 出处），**禁止凭记忆判断组件能力**。
+3. 每个候选记录：项目名、链接、活跃度（最近提交/issue）、许可证、与林枢技术栈（PHP 8 + ThinkPHP 8 + MySQL + Vue3 UMD）的兼容性。
+4. 逐项三态结论：✅ 直接复用（附接入方式）/ ⚠️ 参考实现（附借鉴点）/ ❌ 仍需自建（附理由）。
+5. 注意：**林枢功能包禁止引入 npm 构建链（SOP F-12）**，前端类轮子必须以 UMD 直引或纯后端实现为前提评估。
 
 ### 第 ③ 层 · 大厂同类产品架构参考
 

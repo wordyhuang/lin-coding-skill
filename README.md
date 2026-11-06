@@ -50,7 +50,7 @@
 | 开工包生成 SOP V_1.8 | **内嵌** `references/sop-v1.8.md`（唯一事实源；已直接内置社区仓库地址与输出根目录规则，无本地路径依赖） |
 | 林枢编码指引 00~08 | 社区仓库 Gitee raw（master 分支，主源）：<https://gitee.com/wordy_huang/linhub> · GitHub 兜底：<https://github.com/wordyhuang/linhub> |
 | 宿主服务契约（15 项） | `code/host/linhub/host/src/services/services.php`（Gitee raw） |
-| workdesktop-ai | npm registry API（latest 1.2.12 · Vue3 + Element Plus · UMD 直引） |
+| workdesktop-ai | 社区仓库 Gitee raw（**main** 分支，主源）：<https://gitee.com/wordy_huang/workdesktop-ai> · GitHub 镜像：<https://github.com/wordyhuang/workdesktop-ai>。AI 阅读按 `ai-router.md` 场景路由（`scenarios/` 场景子文件 + `ai-api/` 组件精确 API） |
 
 > 内嵌 SOP 已将林枢资料引用直接写为上述社区仓库地址，skill 全部文件**不含任何本地路径依赖**，可公开分发使用。
 

@@ -70,7 +70,7 @@ description: 从"一个想法"到"一套通过审查的开工包文档"的一体
 |---|---|---|
 | 林枢 coding-guide 00~08 | **Gitee raw 主源**：`https://gitee.com/wordy_huang/linhub/raw/master/<path>`（分支 master，非 main；请求需跟随重定向） | GitHub raw 实测不可达；GitHub 仓库页（github.com/wordyhuang/linhub）仅作浏览与 commit 元数据兜底 |
 | 林枢宿主服务契约 services.php（15 项） | Gitee raw：`.../raw/master/code/host/linhub/host/src/services/services.php` | 同上 |
-| workdesktop-ai 前端规范 | npm registry API：`https://registry.npmjs.org/workdesktop-ai`（latest 1.2.12，Vue3 + Element Plus）；npmjs.com 网页反爬（403），不作为读取通道 | 无（必达源） |
+| workdesktop-ai 前端规范 | **Gitee raw 主源**：`https://gitee.com/wordy_huang/workdesktop-ai/raw/main/<path>`（分支 **main**，非 master；请求需跟随重定向）。**AI 阅读入口按 `ai-router.md` 场景路由**：① 第一入口 `ai-router.md`（场景判定速查表）② 通用地基 `scenarios/00-common.md`（框架搭建/弹层/反馈/按钮选型）③ 命中的场景子文件 `scenarios/0N-*.md` ④ 组件精确 API `ai-api/wd-{组件名kebab}.md`（34 组件，路径可按组件名直接构造，自动生成随包发布）⑤ 手动 HTTP 请求 `ai-api/use-request-guide.md`；版本见 `README.md`（V_1.5）/ `ai-router.md`（V_1.15） | GitHub 镜像 `https://github.com/wordyhuang/workdesktop-ai`；npm registry API `https://registry.npmjs.org/workdesktop-ai`（仅作版本元数据兜底；npmjs.com 网页反爬 403 不可用） |
 | 开工包 SOP v1.8 | skill 内嵌 `references/sop-v1.8.md`（唯一源） | 无 |
 
 ## 4. 输出目录规则

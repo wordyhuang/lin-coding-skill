@@ -9,7 +9,7 @@
 | 林枢编码指引 00~08 | Gitee raw：`https://gitee.com/wordy_huang/linhub/raw/master/coding-guide/<文件名>`（master 分支，跟随重定向） |
 | 宿主服务契约 | Gitee raw：`.../raw/master/code/host/linhub/host/src/services/services.php` |
 | 分导台定义与已装包菜单快照 | Gitee raw：`.../raw/master/code/host/linhub/host/workspaces.php`（六分导台）与 `.../raw/master/code/host/data/integration/registry.json`（已装包 menus.php 快照，菜单结构核对用） |
-| workdesktop-ai | npm registry API：`https://registry.npmjs.org/workdesktop-ai`（组件清单以仓库 README/版本元数据为准） |
+| workdesktop-ai | **Gitee raw 主源**（分支 **main**，需跟随重定向）：`https://gitee.com/wordy_huang/workdesktop-ai/raw/main/<path>`；GitHub 镜像 `https://github.com/wordyhuang/workdesktop-ai`。**按 `ai-router.md` 场景路由读取，禁止凭名猜测 API**：① `ai-router.md`（场景判定速查表，AI 第一入口）② `scenarios/00-common.md`（通用地基：框架搭建 / 弹层选型 / 操作反馈 / 按钮选型）③ 命中场景子文件 `scenarios/0N-*.md` ④ 组件精确 API `ai-api/wd-{组件名kebab}.md`（34 组件，路径可按组件名直接构造）⑤ `ai-api/use-request-guide.md`（请求流程 / 配置全景 / 排错）。版本以仓库 `README.md`（V_1.5）与 `ai-router.md`（V_1.15）为准 |
 | SOP 规则 | skill 内嵌 `references/sop-v1.8.md` |
 
 ## 1. pre-gen 模式（阶段 3 · 审计想法/方案）
@@ -40,7 +40,7 @@
 |---|--------|---------|
 | C1 | 后端合规 | 文件 3 的 T0 范围、服务声明、事件主题前缀、目录约定对照 `coding-guide/02_后端编码指引.md`、`04_功能包开发指引.md`；**API 响应 code 语义符合约定（`{code,data,message}`，≥0 成功 / 失败一律负数 code，禁止正数或 0 表示失败——SOP §8.2.2 API 响应格式行、文件 3 §2 统一响应层任务）** |
 | C2 | 数据合规 | 文件 2 表前缀、迁移方式对照 `coding-guide/05_数据与迁移指引.md` |
-| C3 | 前端合规 | 文件 4 组件映射、F-01~F-12 满足方式对照 `coding-guide/03_前端编码指引.md` + workdesktop-ai 实际组件能力 |
+| C3 | 前端合规 | 文件 4 组件映射、F-01~F-12 满足方式对照 `coding-guide/03_前端编码指引.md` + workdesktop-ai 实际组件能力；**组件名与 props/emits/slots 必须能逐一在 `ai-api/wd-{组件名}.md` 查到（禁止凭记忆或猜测组件/参数名，查不到的判虚构）** |
 | C4 | 服务映射真实性 | 文件 6 服务映射三态结论对照 `services.php` 实际清单，禁止虚构服务 id |
 | C5 | 框架口径 | 六份 front matter `framework`/`frontend_build` 三处一致（SOP 红线 6、A5） |
 | C6 | 页面规格覆盖 | 文件 4 §1 每个页面均附页面规格卡，内容 / 布局 / 元素 / 操作四层齐备；逐页核对：无"等"字省略、无规格外自创元素与交互、推导项带"推导，待评审"标注、页面任务回链 PG-ID（SOP §2.4 文件 4 §1/§2、TASK-10 判据） |
